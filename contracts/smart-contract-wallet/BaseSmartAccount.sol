@@ -60,13 +60,15 @@ abstract contract BaseSmartAccount is IAccount, BaseSmartAccountErrors {
      * Subclass doesn't need to override this method.
      * Instead, it should override the specific internal validation methods.
      */
-    function validateUserOp(
-        UserOperation calldata userOp,
-        bytes32 userOpHash,
-        uint256 missingAccountFunds
-    ) external virtual override returns (uint256 validationData) {
-        if (msg.sender != address(entryPoint()))
+    function validateUserOp(UserOperation calldata userOp, bytes32 userOpHash, uint256 missingAccountFunds)
+        external
+        virtual
+        override
+        returns (uint256 validationData)
+    {
+        if (msg.sender != address(entryPoint())) {
             revert CallerIsNotAnEntryPoint(msg.sender);
+        }
         validationData = _validateSignature(userOp, userOpHash);
         _validateNonce(userOp.nonce);
         _payPrefund(missingAccountFunds);
@@ -85,10 +87,10 @@ abstract contract BaseSmartAccount is IAccount, BaseSmartAccountErrors {
      *      If the account doesn't use time-range, it is enough to return SIG_VALIDATION_FAILED value (1) for signature failure.
      *      Note that the validation code cannot use block.timestamp (or block.number) directly.
      */
-    function _validateSignature(
-        UserOperation calldata userOp,
-        bytes32 userOpHash
-    ) internal virtual returns (uint256 validationData);
+    function _validateSignature(UserOperation calldata userOp, bytes32 userOpHash)
+        internal
+        virtual
+        returns (uint256 validationData);
 
     /**
      * Validate the nonce of the UserOperation.
@@ -118,10 +120,7 @@ abstract contract BaseSmartAccount is IAccount, BaseSmartAccountErrors {
      */
     function _payPrefund(uint256 missingAccountFunds) internal virtual {
         if (missingAccountFunds != 0) {
-            payable(msg.sender).call{
-                value: missingAccountFunds,
-                gas: type(uint256).max
-            }("");
+            payable(msg.sender).call{value: missingAccountFunds, gas: type(uint256).max}("");
             //ignore failure (its EntryPoint's job to verify, not account.)
         }
     }
@@ -142,9 +141,9 @@ abstract contract BaseSmartAccount is IAccount, BaseSmartAccountErrors {
      * @param refundInfo Required information for gas refunds
      * @param signatures Packed signature/s data ({bytes32 r}{bytes32 s}{uint8 v})
      */
-    function execTransaction(
-        Transaction memory _tx,
-        FeeRefund memory refundInfo,
-        bytes memory signatures
-    ) external payable virtual returns (bool success);
+    function execTransaction(Transaction memory _tx, FeeRefund memory refundInfo, bytes memory signatures)
+        external
+        payable
+        virtual
+        returns (bool success);
 }
