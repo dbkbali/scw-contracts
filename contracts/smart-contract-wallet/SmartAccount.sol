@@ -15,8 +15,6 @@ import {SmartAccountErrors} from "./common/Errors.sol";
 import {ECDSA} from "@openzeppelin/contracts/utils/cryptography/ECDSA.sol";
 import {IModule} from "./interfaces/IModule.sol";
 
-import {IERC6551Account} from "./interfaces/IERC6551Account.sol";
-
 import {IERC20} from "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 
 interface IAccountInvestment {
